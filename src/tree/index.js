@@ -6,6 +6,7 @@ export default function Tree() {
   const [data, setData] = useState(initialData);
   const [tree, setTree] = useState([]);
   const [sorted, setSorted] = useState(false);
+  const [addLevels, setAddLevels] = useState(false);
 
   const ref1 = useRef();
   const ref2 = useRef();
@@ -69,6 +70,22 @@ export default function Tree() {
     }
   };
 
+  const addNewLevel = (e, item) => {
+    if (e.key === 'Enter') {
+      const foundArr = findNestedArr(data, 0, item);
+      if (foundArr) {
+        const ind = foundArr.findIndex((obj) => obj.name === item.name);
+        foundArr[ind].children.push({
+          name: e.target.value,
+          children: [],
+        });
+        setData(data);
+        generateNewTree(data);
+      }
+      e.target.value = '';
+    }
+  };
+
   const handleDelete = (item) => {
     const foundArr = findNestedArr(data, 0, item);
     if (foundArr) {
@@ -119,6 +136,9 @@ export default function Tree() {
       <p className="level1">frog</p> */}
 
       <button onClick={toggle}>Toggle</button>
+      <button onClick={() => setAddLevels(!addLevels)}>
+        {addLevels ? 'Hide inputs for new levels' : 'Add levels'}
+      </button>
 
       {tree.map((item, index) => {
         // let insert = '';
@@ -139,6 +159,9 @@ export default function Tree() {
                 >
                   ❌
                 </span>
+                {addLevels && (
+                  <input type="text" onKeyDown={(e) => addNewLevel(e, item)} />
+                )}
               </p>
             )}
             {item.levelEnd && (
