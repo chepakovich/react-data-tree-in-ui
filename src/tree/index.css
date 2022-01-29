@@ -1,0 +1,18 @@
+.tree {
+  background-color: #efefef;
+  height: 100%;
+  padding: 10px;
+  font-family: monospace;
+}
+
+.level1::before {
+  content: '\00a0\00a0\00a0\00a0';
+}
+
+.level2::before {
+  content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
+}
+
+.level3::before {
+  content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
+}
