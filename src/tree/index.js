@@ -48,11 +48,18 @@ export default function Tree() {
       <p className="level3">elephant</p>
       <p className="level1">frog</p> */}
 
-      {tree.reverse().map((item, index) => (
-        <p key={index} className={`level${item.level}`}>
-          {item.name}
-        </p>
-      ))}
+      {tree.map((item, index) => {
+        let insert = '';
+        for (let i = 0; i < item.level; i++) {
+          insert += '.';
+        }
+        const modifiedName = item.name[0] + insert + item.name.substring(1);
+        return (
+          <p key={index} className={`level${item.level}`}>
+            {modifiedName}
+          </p>
+        );
+      })}
     </div>
   );
 }
