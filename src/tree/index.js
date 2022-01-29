@@ -48,7 +48,7 @@ export default function Tree() {
       <p className="level3">elephant</p>
       <p className="level1">frog</p> */}
 
-      {tree.map((item, index) => (
+      {tree.reverse().map((item, index) => (
         <p key={index} className={`level${item.level}`}>
           {item.name}
         </p>
