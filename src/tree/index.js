@@ -1,9 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import './index.css';
 import initialData from './data';
 
+const BIN_ID = '61f564001960493ad184a1e5';
+const SECRET_KEY =
+  '$2b$10$X30jr7FpvDKoBFgFaBuTje.r27ObV8TQ6Fp7wy0bHMHr7tU6HDVve';
+
 export default function Tree() {
-  const [data, setData] = useState(initialData);
+  // const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [tree, setTree] = useState([]);
   const [sorted, setSorted] = useState(false);
   const [addLevels, setAddLevels] = useState(false);
@@ -34,13 +40,47 @@ export default function Tree() {
     setTree(newTree);
   };
 
+  const fetchData = () => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'secret-key': SECRET_KEY,
+    };
+
+    axios
+      .get(`https://api.jsonbin.io/b/${BIN_ID}`, { headers })
+      .then((res) => {
+        setData(res.data);
+        generateNewTree(res.data);
+      })
+      .catch((error) => {
+        console.error('error:', error);
+      });
+  };
+
+  const persistData = (data) => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-Master-Key': SECRET_KEY,
+    };
+
+    axios
+      .put(`https://api.jsonbin.io/v3/b/${BIN_ID}`, data, { headers })
+      .then((res) => {
+        console.log('res:', res);
+      })
+      .catch((error) => {
+        console.error('error:', error);
+      });
+  };
+
   useEffect(() => {
     // const position1 = ref1.current.getBoundingClientRect();
     // const position2 = ref2.current.getBoundingClientRect();
     // console.log('position1:', position1.x);
     // console.log('position2:', position2.x);
 
-    generateNewTree(data);
+    // generateNewTree(data);
+    fetchData();
   }, []);
 
   const findNestedArr = (arr, level, item) => {
@@ -65,6 +105,7 @@ export default function Tree() {
         });
         setData(data);
         generateNewTree(data);
+        persistData(data);
       }
       e.target.value = '';
     }
@@ -81,6 +122,7 @@ export default function Tree() {
         });
         setData(data);
         generateNewTree(data);
+        persistData(data);
       }
       e.target.value = '';
     }
@@ -93,6 +135,7 @@ export default function Tree() {
       foundArr.splice(ind, 1);
       setData(data);
       generateNewTree(data);
+      persistData(data);
     }
   };
 
@@ -135,8 +178,14 @@ export default function Tree() {
       <p className="level3">elephant</p>
       <p className="level1">frog</p> */}
 
-      <button onClick={toggle}>Toggle</button>
-      <button onClick={() => setAddLevels(!addLevels)}>
+      <button type="button" class="btn btn-primary btn-sm" onClick={toggle}>
+        Toggle
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm"
+        onClick={() => setAddLevels(!addLevels)}
+      >
         {addLevels ? 'Hide inputs for new levels' : 'Add levels'}
       </button>
 

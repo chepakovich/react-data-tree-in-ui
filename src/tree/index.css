@@ -15,6 +15,10 @@ input {
   width: 150px;
 }
 
+button {
+  margin-right: 8px;
+}
+
 .level1::before {
   content: '\00a0\00a0\00a0\00a0';
 }
