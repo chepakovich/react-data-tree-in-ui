@@ -13,12 +13,19 @@ export default function Tree() {
     const newTree = [];
     const generateTree = (inputArr, level) => {
       if (inputArr.length === 0) return;
+      let name;
       inputArr.forEach((el) => {
+        name = el.name;
         newTree.push({
           level,
-          name: el.name,
+          name,
         });
         generateTree(el.children, level + 1);
+      });
+      newTree.push({
+        levelEnd: true,
+        level,
+        name,
       });
     };
     generateTree(newData, 0);
@@ -33,6 +40,43 @@ export default function Tree() {
 
     generateNewTree(data);
   }, []);
+
+  const findNestedArr = (arr, level, item) => {
+    if (arr.length !== 0 && level <= item.level) {
+      for (const el of arr) {
+        if (level === item.level && el.name === item.name) {
+          return arr;
+        }
+        const result = findNestedArr(el.children, level + 1, item);
+        if (result) return result;
+      }
+    }
+  };
+
+  const handleKeyDown = (e, item) => {
+    if (e.key === 'Enter') {
+      const foundArr = findNestedArr(data, 0, item);
+      if (foundArr) {
+        foundArr.push({
+          name: e.target.value,
+          children: [],
+        });
+        setData(data);
+        generateNewTree(data);
+      }
+      e.target.value = '';
+    }
+  };
+
+  const handleDelete = (item) => {
+    const foundArr = findNestedArr(data, 0, item);
+    if (foundArr) {
+      const ind = foundArr.findIndex((obj) => obj.name === item.name);
+      foundArr.splice(ind, 1);
+      setData(data);
+      generateNewTree(data);
+    }
+  };
 
   return (
     <div className="tree">
@@ -49,15 +93,32 @@ export default function Tree() {
       <p className="level1">frog</p> */}
 
       {tree.map((item, index) => {
-        let insert = '';
-        for (let i = 0; i < item.level; i++) {
-          insert += '.';
-        }
-        const modifiedName = item.name[0] + insert + item.name.substring(1);
+        // let insert = '';
+        // for (let i = 0; i < item.level; i++) {
+        //   insert += '.';
+        // }
+        // const modifiedName = item.name[0] + insert + item.name.substring(1);
+        const modifiedName = item.name;
         return (
-          <p key={index} className={`level${item.level}`}>
-            {modifiedName}
-          </p>
+          <div key={index}>
+            {!item.levelEnd && (
+              <p className={`level${item.level}`}>
+                {modifiedName}
+                {` `}
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleDelete(item)}
+                >
+                  ❌
+                </span>
+              </p>
+            )}
+            {item.levelEnd && (
+              <div className={`level${item.level}`}>
+                <input type="text" onKeyDown={(e) => handleKeyDown(e, item)} />
+              </div>
+            )}
+          </div>
         );
       })}
     </div>

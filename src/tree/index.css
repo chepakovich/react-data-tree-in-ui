@@ -6,7 +6,16 @@
   counter-reset: counter-level0 counter-level1 counter-level2 counter-level3;
 }
 
-/* .level1::before {
+p,
+input {
+  margin: 12px 0 0;
+}
+
+input {
+  width: 150px;
+}
+
+.level1::before {
   content: '\00a0\00a0\00a0\00a0';
 }
 
@@ -16,8 +25,9 @@
 
 .level3::before {
   content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
-} */
+}
 
+/*
 .level0::before {
   counter-increment: counter-level0;
   content: counter(counter-level0) '\00a0';
@@ -43,4 +53,4 @@
     ) '.' counter(counter-level1) '.' counter(counter-level2) '.' counter(
       counter-level3
     ) '\00a0';
-}
+} */
