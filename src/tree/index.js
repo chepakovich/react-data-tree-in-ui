@@ -5,6 +5,7 @@ import initialData from './data';
 export default function Tree() {
   const [data, setData] = useState(initialData);
   const [tree, setTree] = useState([]);
+  const [sorted, setSorted] = useState(false);
 
   const ref1 = useRef();
   const ref2 = useRef();
@@ -78,6 +79,31 @@ export default function Tree() {
     }
   };
 
+  const sortTree = (arr) => {
+    const recursiveSort = (inputArr) => {
+      if (arr.length === 0) return;
+      inputArr.sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      );
+      for (const el of inputArr) {
+        recursiveSort(el.children);
+      }
+    };
+
+    recursiveSort(arr);
+    generateNewTree(arr, 0);
+    setSorted(true);
+  };
+
+  const toggle = () => {
+    if (sorted) {
+      generateNewTree(data, 0);
+      setSorted(false);
+    } else {
+      sortTree(JSON.parse(JSON.stringify(data)));
+    }
+  };
+
   return (
     <div className="tree">
       {/* <p className="level0">root</p>
@@ -91,6 +117,8 @@ export default function Tree() {
       <p className="level2">dog</p>
       <p className="level3">elephant</p>
       <p className="level1">frog</p> */}
+
+      <button onClick={toggle}>Toggle</button>
 
       {tree.map((item, index) => {
         // let insert = '';
