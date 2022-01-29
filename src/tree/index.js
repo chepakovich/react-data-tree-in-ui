@@ -13,19 +13,12 @@ export default function Tree() {
     const newTree = [];
     const generateTree = (inputArr, level) => {
       if (inputArr.length === 0) return;
-      let name;
       inputArr.forEach((el) => {
-        name = el.name;
         newTree.push({
           level,
-          name,
+          name: el.name,
         });
         generateTree(el.children, level + 1);
-      });
-      newTree.push({
-        levelEnd: true,
-        level,
-        name,
       });
     };
     generateTree(newData, 0);
